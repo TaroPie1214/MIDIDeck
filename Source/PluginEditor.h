@@ -37,7 +37,7 @@ private:
     int mapCount = 0;
 
     // Add button
-    juce::TextButton addButton{ juce::String("Add...") };
+    juce::TextButton addButton{ "Add..." };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MIDIDeckAudioProcessorEditor)
 };

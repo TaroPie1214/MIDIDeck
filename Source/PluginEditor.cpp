@@ -13,7 +13,7 @@
 MIDIDeckAudioProcessorEditor::MIDIDeckAudioProcessorEditor (MIDIDeckAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    setSize (400, 60);
+    setSize (500, 60);
 
     addAndMakeVisible(addButton);
     addButton.addListener(this);
@@ -37,17 +37,17 @@ void MIDIDeckAudioProcessorEditor::paint (juce::Graphics& g)
 void MIDIDeckAudioProcessorEditor::resized()
 {
     const int lineHeight = 30;
-    const int borderHeight = 15;
+    const int border = 15;
     const int buttonWidth = 80;
 
-    addButton.setBounds(getWidth() / 2 - buttonWidth / 2, getHeight() - lineHeight - borderHeight, buttonWidth, lineHeight);
+    addButton.setBounds(getWidth() / 2 - buttonWidth / 2, getHeight() - lineHeight - border, buttonWidth, lineHeight);
 }
 
 void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
     if (button == &addButton)
     {
-        setSize(getWidth(), getHeight() + 60);
+        setSize(getWidth(), getHeight() + 45);
         addMap();
 	}
 }
@@ -56,7 +56,7 @@ void MIDIDeckAudioProcessorEditor::addMap()
 {
     auto newMap = std::make_unique<SingleMap>();
 
-    newMap->setBounds(10, 10 + mapCount * 50, 50, 50);
+    newMap->setBounds(15, 15 + mapCount * 45, 470, 30);
 
     // 将新组件添加到动态组件数组中
     dynamicMaps.add(newMap.release());
