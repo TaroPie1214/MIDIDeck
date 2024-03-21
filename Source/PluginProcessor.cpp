@@ -142,10 +142,17 @@ void MIDIDeckAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     juce::MidiBuffer::Iterator it(midiMessages);
     juce::MidiMessage message;
     int sampleNumber;
-    while (it.getNextEvent(message, sampleNumber))
+
+    if (isAddListening)
     {
-		DBG("MIDI message: " + message.getDescription());
-	}
+        DBG("Listening...");
+        while (it.getNextEvent(message, sampleNumber))
+        {
+            midiNoteForListening = message.getNoteNumber();
+            midi2Cmd.remove(0);
+            midi2Cmd.set(midiNoteForListening, "");
+        }
+    }
 }
 
 //==============================================================================

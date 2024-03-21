@@ -54,26 +54,45 @@ void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
 
 void MIDIDeckAudioProcessorEditor::addMap()
 {
-    auto newMap = std::make_unique<SingleMap>();
-
-    newMap->setBounds(15, 15 + mapCount * 45, 470, 30);
-
-    // 将新组件添加到动态组件数组中
-    dynamicMaps.add(newMap.release());
-
-    // 将新组件添加到PluginEditor并使其可见
-    addAndMakeVisible(dynamicMaps.getLast());
-
-    mapCount++;
+    // Use 0 as a flag to indicate whether there is a new default mapping
+    if (audioProcessor.midi2Cmd.contains(0))
+    {
+        DBG("Default mapping already exists");
+    }
+    else
+    {
+        audioProcessor.midi2Cmd.set(0, "");
+        refreshMap();
+    }
 }
 
-void MIDIDeckAudioProcessorEditor::removeMap(int index)
+void MIDIDeckAudioProcessorEditor::removeMap(int key)
 {
-	// 从动态组件数组中删除组件
-	dynamicMaps.remove(index);
+    audioProcessor.midi2Cmd.remove(key);
+	refreshMap();
+}
 
-	// 从PluginEditor中删除组件
-	removeChildComponent(dynamicMaps[index]);
+void MIDIDeckAudioProcessorEditor::refreshMap()
+{
+    // clear all of the components in dynamicMaps
+    for (size_t i = 0; i < dynamicMaps.size(); ++i)
+    {
+		removeChildComponent(dynamicMaps[i]);
+	}
+    
+    // clear the dynamicMaps
+    dynamicMaps.clear();
 
-	mapCount--;
+    // refresh the layout from midi2Cmd
+    for (auto it = audioProcessor.midi2Cmd.begin(); it != audioProcessor.midi2Cmd.end(); ++it)
+    {
+		auto newMap = std::make_unique<SingleMap>(audioProcessor);
+		newMap->setMidiNote(it.getKey());
+		newMap->setCmdPath(it.getValue());
+        newMap->initComponent();
+		newMap->setBounds(15, 15 + dynamicMaps.size()* 45, 470, 30);
+
+		dynamicMaps.add(newMap.release());
+		addAndMakeVisible(dynamicMaps.getLast());
+	}
 }

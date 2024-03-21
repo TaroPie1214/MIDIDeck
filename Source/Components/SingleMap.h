@@ -11,14 +11,15 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../PluginProcessor.h"
 
 //==============================================================================
 /*
 */
-class SingleMap  : public juce::Component, public juce::FilenameComponentListener, public juce::Button::Listener
+class SingleMap  : public juce::Component, public juce::FilenameComponentListener, public juce::Button::Listener, public juce::Timer
 {
 public:
-    SingleMap();
+    SingleMap(MIDIDeckAudioProcessor&);
     ~SingleMap() override;
 
     void paint (juce::Graphics&) override;
@@ -29,12 +30,23 @@ public:
 
     void buttonClicked(juce::Button* button) override;
 
+    void setMidiNote(int note) { midiNote = note; }
+    void setCmdPath(juce::String path) { cmdPath = path; }
+    
+    void initComponent();
+
+    void timerCallback() override;
+
 private:
+    MIDIDeckAudioProcessor& audioProcessor;
+
     int midiNote = 0;
+    int index = 0;
     juce::String cmdPath = "";
 
     std::unique_ptr<juce::FilenameComponent> fileComp;
     juce::TextButton startListeningButton{ "Start Listening" };
+    juce::Label midiNoteLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SingleMap)
 };

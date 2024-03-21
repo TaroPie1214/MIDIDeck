@@ -56,6 +56,12 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    bool isAddListening = false;
+    int midiNoteForListening = 0;
+
+    // create a juce::HashMap to store the midi note and the command path
+    juce::HashMap<int, juce::String> midi2Cmd;
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MIDIDeckAudioProcessor)

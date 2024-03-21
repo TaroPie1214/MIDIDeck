@@ -29,12 +29,12 @@ public:
 
     void addMap();
     void removeMap(int index);
+    void refreshMap();
 
 private:
     MIDIDeckAudioProcessor& audioProcessor;
 
     juce::OwnedArray<SingleMap> dynamicMaps;
-    int mapCount = 0;
 
     // Add button
     juce::TextButton addButton{ "Add..." };
