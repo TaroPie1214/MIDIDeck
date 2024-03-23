@@ -47,6 +47,8 @@ private:
     std::unique_ptr<juce::FilenameComponent> fileComp;
     juce::TextButton startListeningButton{ "Start Listening" };
     juce::Label midiNoteLabel;
+    
+    int pointCounter = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SingleMap)
 };

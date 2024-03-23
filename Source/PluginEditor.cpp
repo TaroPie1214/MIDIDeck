@@ -29,9 +29,9 @@ void MIDIDeckAudioProcessorEditor::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    //g.setColour (juce::Colours::white);
+    //g.setFont (15.0f);
+    //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void MIDIDeckAudioProcessorEditor::resized()
@@ -47,28 +47,30 @@ void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
     if (button == &addButton)
     {
-        setSize(getWidth(), getHeight() + 45);
         addMap();
 	}
 }
 
 void MIDIDeckAudioProcessorEditor::addMap()
 {
-    // Use 0 as a flag to indicate whether there is a new default mapping
-    if (audioProcessor.midi2Cmd.contains(0))
+    // Use 128 as a flag to indicate whether there is a new default mapping
+    auto it = audioProcessor.midi2Cmd.find(128);
+    if (it != audioProcessor.midi2Cmd.end())
     {
         DBG("Default mapping already exists");
+        juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon, "Warning", "Default mapping already exists");
     }
     else
     {
-        audioProcessor.midi2Cmd.set(0, "");
+        audioProcessor.midi2Cmd[128] = "";
+        setSize(getWidth(), getHeight() + 45);
         refreshMap();
     }
 }
 
 void MIDIDeckAudioProcessorEditor::removeMap(int key)
 {
-    audioProcessor.midi2Cmd.remove(key);
+    audioProcessor.midi2Cmd.erase(key);
 	refreshMap();
 }
 
@@ -83,12 +85,15 @@ void MIDIDeckAudioProcessorEditor::refreshMap()
     // clear the dynamicMaps
     dynamicMaps.clear();
 
+    // Sort the contents of the dictionary according to key value
+    
+
     // refresh the layout from midi2Cmd
     for (auto it = audioProcessor.midi2Cmd.begin(); it != audioProcessor.midi2Cmd.end(); ++it)
     {
 		auto newMap = std::make_unique<SingleMap>(audioProcessor);
-		newMap->setMidiNote(it.getKey());
-		newMap->setCmdPath(it.getValue());
+		newMap->setMidiNote(it->first);
+		newMap->setCmdPath(it->second);
         newMap->initComponent();
 		newMap->setBounds(15, 15 + dynamicMaps.size()* 45, 470, 30);
 

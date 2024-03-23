@@ -66,15 +66,20 @@ void SingleMap::buttonClicked(juce::Button* button)
     if (button == &startListeningButton)
     {
 		DBG("Start Listening");
-        audioProcessor.midiNoteForListening = 0;
+        audioProcessor.midiNoteForListening = 128;
         audioProcessor.isAddListening = true;
+
+        removeChildComponent(&startListeningButton);
+        midiNoteLabel.setText("Listening", juce::dontSendNotification);
+        addAndMakeVisible(midiNoteLabel);
+
+        startTimer(250);
 	}
-    startTimer(1000);
 }
 
 void SingleMap::initComponent()
 {
-    if (midiNote == 0)
+    if (midiNote == 128)
     {
         startListeningButton.addListener(this);
         addAndMakeVisible(startListeningButton);
@@ -88,17 +93,25 @@ void SingleMap::initComponent()
 
 void SingleMap::timerCallback()
 {
-    if (audioProcessor.isAddListening)
+    if (audioProcessor.midiNoteForListening == 128)
     {
-        if (audioProcessor.midiNoteForListening != 0)
+        juce::String tempText = "Listening";
+        if (pointCounter <= 6)
         {
-            stopTimer();
-			DBG("MIDI note: " + juce::String(audioProcessor.midiNoteForListening));
-			setMidiNote(audioProcessor.midiNoteForListening);
-			audioProcessor.isAddListening = false;
-            midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
-            removeChildComponent(&startListeningButton);
-            addAndMakeVisible(midiNoteLabel);
-		}
-	}
+            for (size_t i = 0; i < pointCounter; ++i)
+                tempText += ".";
+            pointCounter++;
+        }
+        else
+            pointCounter = 0;
+
+        midiNoteLabel.setText(tempText, juce::dontSendNotification);
+    }
+    else
+    {
+        stopTimer();
+        DBG("MIDI note: " + juce::String(audioProcessor.midiNoteForListening));
+        setMidiNote(audioProcessor.midiNoteForListening);
+        midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
+    }
 }

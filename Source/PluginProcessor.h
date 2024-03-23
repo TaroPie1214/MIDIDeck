@@ -57,10 +57,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     bool isAddListening = false;
-    int midiNoteForListening = 0;
+    int midiNoteForListening = 128;
 
     // create a juce::HashMap to store the midi note and the command path
-    juce::HashMap<int, juce::String> midi2Cmd;
+    std::map<int, juce::String> midi2Cmd;
 
 private:
     //==============================================================================

@@ -149,8 +149,10 @@ void MIDIDeckAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
         while (it.getNextEvent(message, sampleNumber))
         {
             midiNoteForListening = message.getNoteNumber();
-            midi2Cmd.remove(0);
-            midi2Cmd.set(midiNoteForListening, "");
+            midi2Cmd.erase(128);
+            midi2Cmd[midiNoteForListening] = "";
+            isAddListening = false;
+            break;
         }
     }
 }
