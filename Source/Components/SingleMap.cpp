@@ -98,7 +98,7 @@ void SingleMap::initComponent()
 
 void SingleMap::timerCallback()
 {
-    if (audioProcessor.currentMidiNote == 128)
+    if (audioProcessor.isAddListening == true)
     {
         juce::String tempText = "Listening";
         if (pointCounter <= 6)
