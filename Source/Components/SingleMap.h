@@ -30,9 +30,11 @@ public:
 
     void buttonClicked(juce::Button* button) override;
 
+    int getMidiNote() { return midiNote; }
     void setMidiNote(int note) { midiNote = note; }
     void setCmdPath(juce::String path) { cmdPath = path; }
-    
+
+
     void initComponent();
 
     void timerCallback() override;

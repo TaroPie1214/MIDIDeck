@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utils/CommandThread.h"
 
 //==============================================================================
 /**
@@ -57,12 +58,13 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     bool isAddListening = false;
-    int midiNoteForListening = 128;
+    int currentMidiNote = 128;
 
-    // create a juce::HashMap to store the midi note and the command path
+    // Create a juce::HashMap to store the midi note and the command path
     std::map<int, juce::String> midi2Cmd;
 
 private:
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MIDIDeckAudioProcessor)
 };

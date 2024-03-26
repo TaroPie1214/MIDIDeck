@@ -129,33 +129,64 @@ bool MIDIDeckAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
-void MIDIDeckAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void MIDIDeckAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear(i, 0, buffer.getNumSamples());
 
     // Iterate over listened midi events and print them out
     juce::MidiBuffer::Iterator it(midiMessages);
     juce::MidiMessage message;
     int sampleNumber;
 
+    // Reset currentMidiNote
+    currentMidiNote = 128;
+
+    while (it.getNextEvent(message, sampleNumber))
+        // To avoid repeated detection(NoteOn + NoteOff), only detect NoteOn event
+        if (message.isNoteOn())
+            currentMidiNote = message.getNoteNumber();
+
     if (isAddListening)
     {
-        DBG("Listening...");
-        while (it.getNextEvent(message, sampleNumber))
+        //DBG("Listening...");
+        auto it = midi2Cmd.find(currentMidiNote);
+        if (currentMidiNote != 128)
         {
-            midiNoteForListening = message.getNoteNumber();
-            midi2Cmd.erase(128);
-            midi2Cmd[midiNoteForListening] = "";
-            isAddListening = false;
-            break;
+            if (it != midi2Cmd.end())
+            {
+                DBG("Note " + juce::String(currentMidiNote) + " is already assigned to command " + it->second);
+                juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon, "Warning", "Note " + juce::String(currentMidiNote) + " is already assigned to command " + it->second);
+            }
+            else
+            {
+                midi2Cmd[currentMidiNote] = midi2Cmd[128] != "" ? midi2Cmd[128] : "";
+                midi2Cmd.erase(128);
+                isAddListening = false;
+            }
         }
     }
-}
+    else
+    {
+        // Iterate over midi2Cmd and execute the commands
+        for (auto it = midi2Cmd.begin(); it != midi2Cmd.end(); ++it)
+        {
+            if (it->first == currentMidiNote && it->first != 128)
+            {
+                // Excute the command
+                if (it->second != "")
+                {
+                    CommandThread commandThread(it->second);
+                    commandThread.startThread();
+                }
+            }
+        }
+    }
+ }
 
 //==============================================================================
 bool MIDIDeckAudioProcessor::hasEditor() const

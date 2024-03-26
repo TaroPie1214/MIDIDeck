@@ -13,7 +13,7 @@
 MIDIDeckAudioProcessorEditor::MIDIDeckAudioProcessorEditor (MIDIDeckAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    setSize (500, 60);
+    setSize (565, 60);
 
     addAndMakeVisible(addButton);
     addButton.addListener(this);
@@ -22,7 +22,7 @@ MIDIDeckAudioProcessorEditor::MIDIDeckAudioProcessorEditor (MIDIDeckAudioProcess
 MIDIDeckAudioProcessorEditor::~MIDIDeckAudioProcessorEditor()
 {
 }
-
+ 
 //==============================================================================
 void MIDIDeckAudioProcessorEditor::paint (juce::Graphics& g)
 {
@@ -49,6 +49,17 @@ void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
     {
         addMap();
 	}
+
+    // Iterate delButtonsArr and delete the corresponding indexes in the two OwnedArrays
+    for (auto i = 0; i < delButtonsArr.size(); ++i)
+    {
+        if (button == delButtonsArr[i])
+        {
+            audioProcessor.midi2Cmd.erase(dynamicMaps[i]->getMidiNote());
+            setSize(getWidth(), getHeight() - 45);
+            refreshMap();
+        }
+    }
 }
 
 void MIDIDeckAudioProcessorEditor::addMap()
@@ -80,13 +91,12 @@ void MIDIDeckAudioProcessorEditor::refreshMap()
     for (size_t i = 0; i < dynamicMaps.size(); ++i)
     {
 		removeChildComponent(dynamicMaps[i]);
+        removeChildComponent(delButtonsArr[i]);
 	}
     
     // clear the dynamicMaps
     dynamicMaps.clear();
-
-    // Sort the contents of the dictionary according to key value
-    
+    delButtonsArr.clear();
 
     // refresh the layout from midi2Cmd
     for (auto it = audioProcessor.midi2Cmd.begin(); it != audioProcessor.midi2Cmd.end(); ++it)
@@ -99,5 +109,14 @@ void MIDIDeckAudioProcessorEditor::refreshMap()
 
 		dynamicMaps.add(newMap.release());
 		addAndMakeVisible(dynamicMaps.getLast());
+
+        auto delButton = std::make_unique<juce::TextButton>("Del");
+        delButton->addListener(this);
+        delButton->setBounds(500, 15 + delButtonsArr.size() * 45, 50, 30);
+        delButtonsArr.add(delButton.release());
+        addAndMakeVisible(delButtonsArr.getLast());
 	}
+
+    if (dynamicMaps.size() != delButtonsArr.size())
+        jassertfalse;
 }

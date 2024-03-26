@@ -4,6 +4,9 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="xY086B" name="MIDIDeck">
     <GROUP id="{0F9D9B82-E474-07C0-7009-B5D72C9ABBC7}" name="Source">
+      <GROUP id="{54B9CDC9-DC27-D315-5F98-030207526386}" name="Utils">
+        <FILE id="CNOYDV" name="CommandThread.h" compile="0" resource="0" file="Source/Utils/CommandThread.h"/>
+      </GROUP>
       <GROUP id="{00BB5C84-A8A0-F40C-1B97-9FC5C7D20185}" name="Components">
         <FILE id="zQrCdm" name="SingleMap.cpp" compile="1" resource="0" file="Source/Components/SingleMap.cpp"/>
         <FILE id="l1aTaw" name="SingleMap.h" compile="0" resource="0" file="Source/Components/SingleMap.h"/>

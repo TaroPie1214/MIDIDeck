@@ -47,10 +47,13 @@ void SingleMap::resized()
 
 void SingleMap::filenameComponentChanged(juce::FilenameComponent* fileComponentThatHasChanged)
 {
-    //if (fileComponentThatHasChanged == fileComp.get())
-    //    readFile(fileComp->getCurrentFile());
-
-    juce::String storeLocationTemp = fileComp->getCurrentFileText();
+    if (fileComponentThatHasChanged == fileComp.get())
+    {
+        // get file path
+        cmdPath = fileComponentThatHasChanged->getCurrentFile().getFullPathName();
+        DBG("File path: " + cmdPath);
+        audioProcessor.midi2Cmd[midiNote] = cmdPath;
+    }
 }
 
 void SingleMap::readFile(const juce::File& fileToRead)
@@ -66,7 +69,7 @@ void SingleMap::buttonClicked(juce::Button* button)
     if (button == &startListeningButton)
     {
 		DBG("Start Listening");
-        audioProcessor.midiNoteForListening = 128;
+        audioProcessor.currentMidiNote = 128;
         audioProcessor.isAddListening = true;
 
         removeChildComponent(&startListeningButton);
@@ -88,12 +91,14 @@ void SingleMap::initComponent()
     {
         midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
         addAndMakeVisible(midiNoteLabel);
+        // set the default fileComp path to cmdPath
+        fileComp->setCurrentFile(cmdPath, true);
     }
 }
 
 void SingleMap::timerCallback()
 {
-    if (audioProcessor.midiNoteForListening == 128)
+    if (audioProcessor.currentMidiNote == 128)
     {
         juce::String tempText = "Listening";
         if (pointCounter <= 6)
@@ -110,8 +115,8 @@ void SingleMap::timerCallback()
     else
     {
         stopTimer();
-        DBG("MIDI note: " + juce::String(audioProcessor.midiNoteForListening));
-        setMidiNote(audioProcessor.midiNoteForListening);
+        DBG("MIDI note: " + juce::String(audioProcessor.currentMidiNote));
+        midiNote = audioProcessor.currentMidiNote;
         midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
     }
 }
