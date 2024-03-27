@@ -1,6 +1,6 @@
 # MIDIDeck
 
-Use your midi keyboard as a stream deck
+Use your midi keyboard like a stream deck
 
 # How to build
 
