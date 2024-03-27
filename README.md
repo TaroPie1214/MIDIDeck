@@ -26,6 +26,8 @@ Press the Start Listening button, then press the key on the MIDI keyboard you wa
 
 Finally, select the .bat file you want to execute.
 
+After the configuration is completed, you can also save the current configuration by clicking the Save button, which will generate a file called MIDIDeckPreset.json in the same directory as the .exe
+
 Enjoy your MIDI mapping shortcuts!!~~
 
 # Todo
