@@ -8,7 +8,7 @@ Use your midi keyboard as a stream deck
 
 2. If you are very confused about the first step, I also have an introductory tutorial for JUCE that you can refer to: https://www.bilibili.com/video/BV14Q4y1c79d
 
-3. Of course, you can also download the latest compiled .exe file directly from the Release page.
+3. Of course, you can also download the latest compiled .exe file directly from the Release page: [Releases · TaroPie1214/MIDIDeck (github.com)](https://github.com/TaroPie1214/MIDIDeck/releases)
 
 # How to use
 
