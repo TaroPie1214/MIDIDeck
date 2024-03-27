@@ -36,7 +36,7 @@ public:
 private:
     MIDIDeckAudioProcessor& audioProcessor;
 
-    juce::OwnedArray<SingleMap> dynamicMaps;
+    juce::OwnedArray<SingleMap> singleMapArr;
     juce::OwnedArray<juce::TextButton> delButtonsArr;
 
     juce::TextButton addButton{ "Add..." };

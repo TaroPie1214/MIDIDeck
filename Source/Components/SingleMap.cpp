@@ -19,9 +19,9 @@ SingleMap::SingleMap(MIDIDeckAudioProcessor& p) : audioProcessor(p)
                                                 false,                    // can edit file name,
                                                 false,                    // is directory,
                                                 false,                    // is for saving,
-                                                {},                       // browser wildcard suffix,
+                                                {"*.bat"},                // browser wildcard suffix,
                                                 {},                       // enforced suffix,
-                                                "Select file to open"));  // text when nothing selected
+                                                "Select .bat file to open"));  // text when nothing selected
     addAndMakeVisible(fileComp.get());
     fileComp->addListener(this);
 
@@ -49,7 +49,7 @@ void SingleMap::filenameComponentChanged(juce::FilenameComponent* fileComponentT
 {
     if (fileComponentThatHasChanged == fileComp.get())
     {
-        // get file path
+        // Get file path
         cmdPath = fileComponentThatHasChanged->getCurrentFile().getFullPathName();
         DBG("File path: " + cmdPath);
         audioProcessor.midi2Cmd[midiNote] = cmdPath;
@@ -91,7 +91,7 @@ void SingleMap::initComponent()
     {
         midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
         addAndMakeVisible(midiNoteLabel);
-        // set the default fileComp path to cmdPath
+        // Set the default fileComp path to cmdPath
         fileComp->setCurrentFile(cmdPath, true);
     }
 }

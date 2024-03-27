@@ -175,10 +175,8 @@ void MIDIDeckAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
     juce::MidiBuffer::Iterator it(midiMessages);
     juce::MidiMessage message;
     int sampleNumber;
-
     // Reset currentMidiNote
     currentMidiNote = 128;
-
     while (it.getNextEvent(message, sampleNumber))
         // To avoid repeated detection(NoteOn + NoteOff), only detect NoteOn event
         if (message.isNoteOn())
@@ -186,9 +184,8 @@ void MIDIDeckAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
     if (isAddListening)
     {
-        //DBG("Listening...");
         auto it = midi2Cmd.find(currentMidiNote);
-        if (currentMidiNote != 128)
+        if (currentMidiNote != 128) 
         {
             if (it != midi2Cmd.end())
             {

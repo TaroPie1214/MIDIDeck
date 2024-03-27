@@ -30,12 +30,7 @@ MIDIDeckAudioProcessorEditor::~MIDIDeckAudioProcessorEditor()
 //==============================================================================
 void MIDIDeckAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    //g.setColour (juce::Colours::white);
-    //g.setFont (15.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void MIDIDeckAudioProcessorEditor::resized()
@@ -67,7 +62,7 @@ void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
     {
         if (button == delButtonsArr[i])
         {
-            audioProcessor.midi2Cmd.erase(dynamicMaps[i]->getMidiNote());
+            audioProcessor.midi2Cmd.erase(singleMapArr[i]->getMidiNote());
             setSize(getWidth(), getHeight() - 45);
             refreshMap();
         }
@@ -98,15 +93,15 @@ void MIDIDeckAudioProcessorEditor::removeMap(int key)
 
 void MIDIDeckAudioProcessorEditor::refreshMap()
 {
-    // clear all of the components in dynamicMaps
-    for (size_t i = 0; i < dynamicMaps.size(); ++i)
+    // Clear all of the components in singleMapArr
+    for (size_t i = 0; i < singleMapArr.size(); ++i)
     {
-		removeChildComponent(dynamicMaps[i]);
+		removeChildComponent(singleMapArr[i]);
         removeChildComponent(delButtonsArr[i]);
 	}
     
-    // clear the dynamicMaps
-    dynamicMaps.clear();
+    // clear the singleMapArr
+    singleMapArr.clear();
     delButtonsArr.clear();
 
     setSize(565, 60);
@@ -120,10 +115,10 @@ void MIDIDeckAudioProcessorEditor::refreshMap()
 		newMap->setMidiNote(it->first);
 		newMap->setCmdPath(it->second);
         newMap->initComponent();
-		newMap->setBounds(15, 15 + dynamicMaps.size()* 45, 470, 30);
+		newMap->setBounds(15, 15 + singleMapArr.size()* 45, 470, 30);
 
-		dynamicMaps.add(newMap.release());
-		addAndMakeVisible(dynamicMaps.getLast());
+		singleMapArr.add(newMap.release());
+		addAndMakeVisible(singleMapArr.getLast());
 
         auto delButton = std::make_unique<juce::TextButton>("Del");
         delButton->addListener(this);
@@ -132,7 +127,7 @@ void MIDIDeckAudioProcessorEditor::refreshMap()
         addAndMakeVisible(delButtonsArr.getLast());
 	}
 
-    if (dynamicMaps.size() != delButtonsArr.size())
+    if (singleMapArr.size() != delButtonsArr.size())
         jassertfalse;
 }
 

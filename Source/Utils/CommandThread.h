@@ -3,7 +3,7 @@
 
     CommandThread.h
     Created: 26 Mar 2024 11:19:12am
-    Author:  sunwei06
+    Author:  TaroPie
 
   ==============================================================================
 */
@@ -19,7 +19,6 @@ public:
     } 
     ~CommandThread()
     {
-        // 在析构函数中停止线程
         stopThread(10000);
     }
 
@@ -29,13 +28,8 @@ public:
 
         if (childProcess.start(command))
         {
-            // 等待进程完成
             childProcess.waitForProcessToFinish(10000);
-
-            // 获取输出
             juce::String output = childProcess.readAllProcessOutput();
-
-            // 打印输出
             juce::Logger::writeToLog(output);
         }
         else
