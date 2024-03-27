@@ -22,6 +22,39 @@ MIDIDeckAudioProcessor::MIDIDeckAudioProcessor()
                        )
 #endif
 {
+    auto path = juce::File::getCurrentWorkingDirectory();
+
+    juce::File presetFile = juce::File::getCurrentWorkingDirectory().getChildFile("MIDIDeckPreset.json");
+    
+    auto json = juce::JSON::parse(presetFile);
+
+    // Check if the JSON is valid
+    if (json.isObject())
+    {
+        // Get the JSON object
+        juce::DynamicObject* object = json.getDynamicObject();
+
+        // Check if the object contains the "maps" property
+        if (object->hasProperty("maps"))
+        {
+            // Get the value of the "maps" property (an array)
+            juce::var maps = object->getProperty("maps");
+
+            // Iterate over the array
+            for (int i = 0; i < maps.size(); ++i)
+            {
+                // Get each object in the array
+                juce::DynamicObject* mapObject = maps[i].getDynamicObject();
+
+                // Get the values of the "key" and "value" properties
+                int key = mapObject->getProperty("key");
+                juce::String value = mapObject->getProperty("value");
+
+                // Add the "key" and "value" to the map
+                midi2Cmd[key] = value;
+            }
+        }
+    }
 }
 
 MIDIDeckAudioProcessor::~MIDIDeckAudioProcessor()
@@ -166,6 +199,7 @@ void MIDIDeckAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
             {
                 midi2Cmd[currentMidiNote] = midi2Cmd[128] != "" ? midi2Cmd[128] : "";
                 midi2Cmd.erase(128);
+                listeningNote = currentMidiNote;
                 isAddListening = false;
             }
         }

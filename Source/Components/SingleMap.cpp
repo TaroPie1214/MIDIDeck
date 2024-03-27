@@ -115,8 +115,8 @@ void SingleMap::timerCallback()
     else
     {
         stopTimer();
-        DBG("MIDI note: " + juce::String(audioProcessor.currentMidiNote));
-        midiNote = audioProcessor.currentMidiNote;
+        DBG("MIDI note: " + juce::String(audioProcessor.listeningNote));
+        midiNote = audioProcessor.listeningNote;
         midiNoteLabel.setText("MIDI note: " + juce::String(midiNote), juce::dontSendNotification);
     }
 }

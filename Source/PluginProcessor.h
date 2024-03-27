@@ -59,6 +59,7 @@ public:
 
     bool isAddListening = false;
     int currentMidiNote = 128;
+    int listeningNote = 128;
 
     // Create a juce::HashMap to store the midi note and the command path
     std::map<int, juce::String> midi2Cmd;

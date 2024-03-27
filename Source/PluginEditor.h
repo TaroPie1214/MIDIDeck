@@ -31,14 +31,16 @@ public:
     void removeMap(int index);
     void refreshMap();
 
+    void savePreset();
+
 private:
     MIDIDeckAudioProcessor& audioProcessor;
 
     juce::OwnedArray<SingleMap> dynamicMaps;
     juce::OwnedArray<juce::TextButton> delButtonsArr;
 
-    // Add button
     juce::TextButton addButton{ "Add..." };
+    juce::TextButton saveButton{ "Save" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MIDIDeckAudioProcessorEditor)
 };
