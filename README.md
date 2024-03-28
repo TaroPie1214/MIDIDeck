@@ -30,7 +30,7 @@ After the configuration is completed, you can also save the current configuratio
 
 Enjoy your MIDI mapping shortcuts!!~~
 
-# Todo
+# TODO
 
 1. Support for Mac
 
