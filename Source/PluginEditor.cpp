@@ -63,6 +63,8 @@ void MIDIDeckAudioProcessorEditor::buttonClicked(juce::Button* button)
         if (button == delButtonsArr[i])
         {
             audioProcessor.midi2Cmd.erase(singleMapArr[i]->getMidiNote());
+            // Prevent bugs caused by clicking del while listening
+            audioProcessor.isAddListening = false;
             setSize(getWidth(), getHeight() - 45);
             refreshMap();
         }
